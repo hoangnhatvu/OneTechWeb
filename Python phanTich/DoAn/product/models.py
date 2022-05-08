@@ -1,35 +1,76 @@
-from django.db import models
-
-# Create your models here.
+from django.urls import reverse
+from account.models import Account
 from django.db import models
 
 class Category(models.Model):
-    name = models.CharField(max_length=50)
+    category_name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=100, unique=True)
 
-    @staticmethod
-    def get_all_categories():
-        return Category.objects.all()
+    class Meta:
+        verbose_name = 'category'
+        verbose_name_plural = 'categories'
+
+    def get_url(self):
+        return reverse('products_by_category', args=[self.slug])
 
     def __str__(self):
-        return self.name
+        return self.category_name
 
-class Products(models.Model):
-    name = models.CharField(max_length=60)
-    price = models.IntegerField(default=0)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    description = models.TextField(default='')
-    image = models.ImageField(upload_to='uploads/products/')
+class Product(models.Model):
+    product_name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.TextField(max_length=500, blank=True)
+    price = models.IntegerField()
+    images = models.ImageField(upload_to='photos/products')
+    stock = models.IntegerField()
+    is_available = models.BooleanField(default=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)    # Khi xóa category thì Product bị xóa
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
 
-    @staticmethod
-    def get_products_by_id(ids):
-        return Products.objects.filter(id__in=ids)
-    @staticmethod
-    def get_all_products():
-        return Products.objects.all()
+    def get_url(self):
+        return reverse('product_detail', args=[self.category.slug, self.slug])
 
-    @staticmethod
-    def get_all_products_by_categoryid(category_id):
-        if category_id:
-            return Products.objects.filter(category=category_id)
-        else:
-            return Products.get_all_products()
+    def __str__(self):
+        return self.product_name
+
+
+class VariationManager(models.Manager):
+    def colors(self):
+        return super(VariationManager, self).filter(variation_category='color', is_active=True)
+
+    def sizes(self):
+        return super(VariationManager, self).filter(variation_category='size', is_active=True)
+
+
+variation_category_choice = (
+    ('color', 'color'),
+    ('size', 'size'),
+)
+
+class Variation(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    variation_category = models.CharField(max_length=100, choices=variation_category_choice)
+    variation_value = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    objects = VariationManager()
+
+    def __str__(self):
+        return self.variation_value
+
+
+class ReviewRating(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100, blank=True)
+    review = models.TextField(max_length=500, blank=True)
+    rating = models.FloatField()
+    ip = models.CharField(max_length=20, blank=True)
+    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.subject

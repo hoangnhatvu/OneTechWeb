@@ -22,8 +22,8 @@
 									{% endfor %}
 								{% else %}
 								<div class="user_icon"><img src="{% static 'images/user.svg' %}" alt=""></div>
-								<div><a href="/signup">Đăng ký</a></div>
-								<div><a href="/login">Đăng nhập</a></div>
+								<div><a href="{% url 'register' %}">Đăng ký</a></div>
+								<div><a href="{% url 'login' %}">Đăng nhập</a></div>
 								{% endif %}
 							</div>
 						</div>
@@ -57,8 +57,8 @@
 												<span class="custom_dropdown_placeholder clc">Tất cả sản phẩm</span>
 												<i class="fas fa-chevron-down"></i>
 												<ul class="custom_list clc">
-													{% for category in categories %}
-													<li><a class="clc" href="#">{{category.name}}</a></li>
+													{% for category in links %}
+													<li><a class="clc" href="#">{{category.category_name}}</a></li>
 													{% endfor %}
 												</ul>
 											</div>
@@ -86,10 +86,10 @@
 								<div class="cart_container d-flex flex-row align-items-center justify-content-end">
 									<div class="cart_icon">
 										<img src="{% static 'images/cart.png' %}" alt="">
-										<div class="cart_count"><span>10</span></div>
+										<div class="cart_count"><span>{{cart_count}}</span></div>
 									</div>
 									<div class="cart_content">
-										<div class="cart_text"><a href="#">Giỏ hàng</a></div>
+									<div class="cart_text"><a href="{% url 'cart' %}">Giỏ hàng</a></div>
 									</div>
 								</div>
 							</div>
@@ -116,8 +116,8 @@
 									<div class="cat_menu_text">Danh mục sản phẩm</div>
 								</div>
 								<ul class="cat_menu">
-									{% for category in categories %}
-										<li><a href="#">{{category.name}}<i class="fas fa-chevron-right"></i></a></li>
+									{% for category in links %}
+										<li><a href="#">{{category.category_name}}<i class="fas fa-chevron-right"></i></a></li>
 									{% endfor %}
 								</ul>
 							</div>
