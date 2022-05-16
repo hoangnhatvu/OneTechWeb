@@ -5,9 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from product.models import Product, ReviewRating
+from product.models import Product, ReviewRating, Category, RecentView
 from cart.models import Cart, CartItem
-from product.models import Category
 from cart.views import _cart_id
 
 
@@ -49,6 +48,13 @@ def product_detail(request, category_slug, product_slug=None):
     except Exception:
         orderproduct = None
 
+    if RecentView.objects.filter(view_product = single_product):
+        RecentView.objects.filter(view_product = single_product).delete()
+    recent_product = RecentView(view_product = single_product)
+    recent_product.save()
+
+    list_view_product = RecentView.objects.all()
+    products = Product.objects.all()
     reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
 
     context = {
@@ -56,6 +62,8 @@ def product_detail(request, category_slug, product_slug=None):
         'in_cart': in_cart if 'in_cart' in locals() else False,
         'orderproduct': orderproduct,
         'reviews': reviews,
+        'list_view_product': list_view_product,
+        'products': products,
     }
     return render(request, 'product/product_detail.html', context=context)
 

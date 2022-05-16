@@ -140,7 +140,7 @@ def remove_cart_item(request, product_id, cart_item_id):
         if request.user.is_authenticated:
             cart_item = CartItem.objects.get(
                 id=cart_item_id,
-                product=product,
+                product = product,
                 user=request.user
             )
         else:
@@ -198,4 +198,4 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         'tax': tax if "tax" in locals() else "",
         'grand_total': grand_total,
     }
-    return render(request, 'store/checkout.html', context=context)
+    return render(request, 'cart/checkout.html', context=context)

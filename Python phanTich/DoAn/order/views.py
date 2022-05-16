@@ -1,17 +1,17 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from carts.models import CartItem
+from cart.models import CartItem
 from .forms import OrderForm
 import datetime
 from .models import Order, Payment, OrderProduct
-from store.models import Product
+from product.models import Product
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 
 def sendEmail(request, order):
     mail_subject = 'Thank you for your order!'
-    message = render_to_string('orders/order_recieved_email.html', {
+    message = render_to_string('order/order_recieved_email.html', {
         'user': request.user,
         'order': order
     })
@@ -21,8 +21,9 @@ def sendEmail(request, order):
 
 
 def payments(request):
+    print("fskdfhkdshfkjdshfkjdshfkjdshfkjsdhfjkshdfjkhsdjkfhsdjkfhjkdhfjkdshfjksdhfjkdhfjkshdfjkshdfjkhsdkfjh")
     try:
-        if request.is_ajax() and request.method == 'POST':
+        if request.method == 'POST':
             data = request.POST
             order_id = data['orderID']
             trans_id = data['transID']
@@ -93,7 +94,6 @@ def place_order(request, total=0, quantity=0,):
     cart_count = cart_items.count()
     if cart_count <= 0:
         return redirect('store')
-
     grand_total = 0
     tax = 0
     for cart_item in cart_items:
@@ -101,7 +101,6 @@ def place_order(request, total=0, quantity=0,):
         quantity += cart_item.quantity
     tax = (2 * total) / 100
     grand_total = total + tax
-
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -140,7 +139,7 @@ def place_order(request, total=0, quantity=0,):
                 'tax': tax,
                 'grand_total': grand_total,
             }
-            return render(request, 'orders/payments.html', context)
+            return render(request, 'order/payments.html', context)
     else:
         return redirect('checkout')
 
@@ -148,7 +147,6 @@ def place_order(request, total=0, quantity=0,):
 def order_complete(request):
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')
-
     try:
         order = Order.objects.get(order_number=order_number, is_ordered=True)
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
@@ -167,6 +165,6 @@ def order_complete(request):
             'payment': payment,
             'subtotal': subtotal,
         }
-        return render(request, 'orders/order_complete.html', context)
+        return render(request, 'order/order_complete.html', context)
     except Exception:
         return redirect('home')
