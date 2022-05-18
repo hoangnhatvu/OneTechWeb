@@ -61,17 +61,20 @@ def product_detail(request, category_slug, product_slug=None):
 
 
 def search(request):
-    if 'q' in request.GET:
-        q = request.GET.get('q')
-        products = Product.objects.order_by('-created_date').filter(Q(product_name__icontains=q) | Q(description__icontains=q))
+    if request.method == 'POST':
+        seaching = request.POST['searching']
+        if seaching:
+            products = Product.objects.order_by('-created_date').filter(Q(description__icontains = seaching) | Q(product_name__icontains = seaching))
+        else:
+            products = Product.objects.all()
         product_count = products.count()
-    context = {
-        'products': products,
-        'q': q,
-        'product_count': product_count
-    }
-    return render(request, 'store/store.html', context=context)
-
+        context = {
+            'products': products,
+            'product_count': product_count,
+        }
+        return render(request, 'store/store.html', context)
+    else:
+        return render(request, 'store/store.html', {})
 
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER')
