@@ -89,7 +89,6 @@ def payments(request):
 def place_order(request, total=0, quantity=0,):
     current_user = request.user
 
-    # If the cart count is less than or equal to 0, then redirect back to shop
     cart_items = CartItem.objects.filter(user=current_user)
     cart_count = cart_items.count()
     if cart_count <= 0:

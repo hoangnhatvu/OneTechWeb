@@ -24,7 +24,9 @@ class Product(models.Model):
     images = models.ImageField(upload_to='photos/products')
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)    # Khi xóa category thì Product bị xóa
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    num_visit = models.IntegerField(default = 0)
+    last_visit = models.DateTimeField(blank = True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
@@ -33,10 +35,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
-
-class RecentView(models.Model):
-    view_product = models.ForeignKey(Product, on_delete=models.CASCADE, db_constraint=False)
-    date_add = models.DateTimeField(auto_now_add=True)
 
 class VariationManager(models.Manager):
     def colors(self):

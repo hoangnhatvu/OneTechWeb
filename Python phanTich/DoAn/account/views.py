@@ -34,8 +34,11 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
+            user_profile = UserProfile(user = user)
+            user_profile.save()
+
             current_site = get_current_site(request=request)
-            mail_subject = 'Activate your blog account.'
+            mail_subject = 'Kích hoạt tài khoản của bạn.'
             message = render_to_string('accounts/active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -139,17 +142,16 @@ def activate(request, uidb64, token):
         messages.error(request=request, message="Link xác nhận không tồn tại!")
         return redirect('home')
 
-
-@login_required(login_url="login")
+@login_required(login_url='login')
 def dashboard(request):
     orders = Order.objects.order_by('-created_at').filter(user=request.user, is_ordered=True)
     orders_count = orders.count()
 
-    #user_profile = UserProfile.objects.get(user_id=request.user.id)
+    user_profile = UserProfile.objects.get(user_id=request.user.id)
 
     context = {
         'orders_count': orders_count,
-       # 'user_profile': user_profile,
+        'user_profile': user_profile,
     }
     return render(request, 'accounts/dashboard.html', context=context)
 
@@ -175,9 +177,8 @@ def order_detail(request, order_id):
     }
     return render(request, 'order/order_detail.html', context)
 
-@login_required(login_url='login')
 def edit_profile(request):
-    user_profile = get_object_or_404(UserProfile, user=request.user)
+    user_profile = UserProfile.objects.get(user_id=request.user.id)
     if request.method == "POST":
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = UserProfileForm(request.POST, request.FILES, instance=user_profile)

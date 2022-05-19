@@ -4,8 +4,9 @@ from product.forms import ReviewForm
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Q
+from datetime import datetime
 
-from product.models import Product, ReviewRating, Category, RecentView
+from product.models import Product, ReviewRating, Category
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
 
@@ -29,7 +30,6 @@ def store(request, category_slug=None):
     }
     return render(request, 'store/store.html', context=context)
 
-
 def product_detail(request, category_slug, product_slug=None):
     try:
         single_product = Product.objects.get(category__slug=category_slug, slug=product_slug)
@@ -48,22 +48,17 @@ def product_detail(request, category_slug, product_slug=None):
     except Exception:
         orderproduct = None
 
-    if RecentView.objects.filter(view_product = single_product):
-        RecentView.objects.filter(view_product = single_product).delete()
-    recent_product = RecentView(view_product = single_product)
-    recent_product.save()
-
-    list_view_product = RecentView.objects.all()
-    products = Product.objects.all()
+    single_product.num_visit = single_product.num_visit + 1
+    single_product.last_visit = datetime.now()
+    single_product.save()
     reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
+
 
     context = {
         'single_product': single_product,
         'in_cart': in_cart if 'in_cart' in locals() else False,
         'orderproduct': orderproduct,
         'reviews': reviews,
-        'list_view_product': list_view_product,
-        'products': products,
     }
     return render(request, 'product/product_detail.html', context=context)
 
