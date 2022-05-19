@@ -1,0 +1,48 @@
+{% extends 'homepage/base.html' %}
+{% load static %}
+{% blockcss %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/blog_styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/blog_responsive.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="super_container">
+
+	<!-- Home -->
+
+	<div class="home">
+		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/shop_background.jpg' %}"></div>
+		<div class="home_overlay"></div>
+		<div class="home_content d-flex flex-column align-items-center justify-content-center">
+			<h2 class="home_title">Tin tức công nghệ</h2>
+		</div>
+	</div>
+
+	<!-- Blog -->
+
+	<div class="blog">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="blog_posts d-flex flex-row align-items-start justify-content-between">
+						
+						<!-- Blog post -->
+						{% blog in blogs %}
+						<div class="blog_post">
+							<div class="blog_image" style="background-image:url{{blog.image.url}}"></div>
+							<div class="blog_text">{{blog.title}}</div>
+							<div class="blog_button"><a href="blog_single.html">Đọc thêm</a></div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+					
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/blog_custom.js' %}"></script>
+{% endblock %}
