@@ -1,9 +1,12 @@
 from django.contrib import admin
-from .models import Product ,Category, Variation, ReviewRating
+from .models import Product ,Category, Variation, ReviewRating, RecentView
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('category_name',)}
     list_display = ('category_name', 'slug')
+
+class RecentViewAdmin(admin.ModelAdmin):
+    list_display = ('view_product', 'date_add')
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'price', 'stock', 'category', 'created_date', 'modified_date', 'is_available')
@@ -19,4 +22,5 @@ class VariationAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Variation, VariationAdmin)
+admin.site.register(RecentView, RecentViewAdmin)
 admin.site.register(ReviewRating)

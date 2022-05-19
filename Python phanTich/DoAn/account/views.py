@@ -1,6 +1,5 @@
-from re import split
 from cart.models import Cart, CartItem
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages, auth
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -11,8 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import authenticate
 
-from .forms import RegistrationForm
-from account.models import Account
+from .forms import RegistrationForm, UserForm, UserProfileForm
+from order.models import Order, OrderProduct
+from .models import Account, UserProfile
 from cart.views import _cart_id
 
 import requests
@@ -46,11 +46,11 @@ def register(request):
             send_email.send()
             messages.success(
                 request=request,
-                message="Please confirm your email address to complete the registration"
+                message="Vui lòng xác nhận email để hoàn tất đăng ký!"
             )
             return redirect('register')
         else:
-            messages.error(request=request, message="Register failed!")
+            messages.error(request=request, message="Đăng ký thất bại!")
     else:
         form = RegistrationForm()
     context = {
@@ -95,7 +95,7 @@ def login(request):
             except Exception:
                 pass
             auth.login(request=request, user=user)
-            messages.success(request=request, message="Login successful!")
+            messages.success(request=request, message="Đăng nhập thành công")
 
             url = request.META.get('HTTP_REFERER')
             try:
@@ -118,7 +118,7 @@ def login(request):
 @login_required(login_url="login")
 def logout(request):
     auth.logout(request)
-    messages.success(request=request, message="You are logged out!")
+    messages.success(request=request, message="Bạn đã đăng xuất!")
     return redirect('login')
 
 
@@ -133,74 +133,66 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         messages.success(
-            request=request, message="Your account is activated, please login!")
+            request=request, message="Tài khoản của bạn đã được kích hoạt, vui lòng đăng nhập!")
         return render(request, 'accounts/login.html')
     else:
-        messages.error(request=request, message="Activation link is invalid!")
+        messages.error(request=request, message="Link xác nhận không tồn tại!")
         return redirect('home')
 
 
 @login_required(login_url="login")
 def dashboard(request):
-    return render(request, "accounts/dashboard.html")
+    orders = Order.objects.order_by('-created_at').filter(user=request.user, is_ordered=True)
+    orders_count = orders.count()
 
+    #user_profile = UserProfile.objects.get(user_id=request.user.id)
 
-def forgotPassword(request):
-    try:
-        if request.method == 'POST':
-            email = request.POST.get('email')
-            user = Account.objects.get(email__exact=email)
+    context = {
+        'orders_count': orders_count,
+       # 'user_profile': user_profile,
+    }
+    return render(request, 'accounts/dashboard.html', context=context)
 
-            current_site = get_current_site(request=request)
-            mail_subject = 'Reset your password'
-            message = render_to_string('accounts/reset_password_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user)
-            })
-            send_email = EmailMessage(mail_subject, message, to=[email])
-            send_email.send()
+@login_required(login_url='login')
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
+    context = {
+        'orders': orders
+    }
+    return render(request, 'order/my_orders.html', context=context)
 
-            messages.success(
-                request=request, message="Password reset email has been sent to your email address")
-    except Exception:
-        messages.error(request=request, message="Account does not exist!")
-    finally:
-        context = {
-            'email': email if 'email' in locals() else '',
-        }
-        return render(request, "accounts/forgotPassword.html", context=context)
+def order_detail(request, order_id):
+    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+    order = Order.objects.get(order_number=order_id)
+    subtotal = 0
+    for i in order_detail:
+        subtotal += i.product_price * i.quantity
 
+    context = {
+        'order_detail': order_detail,
+        'order': order,
+        'subtotal': subtotal,
+    }
+    return render(request, 'order/order_detail.html', context)
 
-def reset_password_validate(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = Account.objects.get(pk=uid)
-    except Exception:
-        user = None
-
-    if user is not None and default_token_generator.check_token(user, token):
-        request.session['uid'] = uid
-        messages.info(request=request, message='Please reset your password')
-        return redirect('reset_password')
+@login_required(login_url='login')
+def edit_profile(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == "POST":
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Thông tin của bạn đã được cập nhật')
+            return redirect('edit_profile')
     else:
-        messages.error(request=request, message="This link has been expired!")
-        return redirect('home')
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=user_profile)
 
-
-def reset_password(request):
-    if request.method == 'POST':
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-
-        if password == confirm_password:
-            uid = request.session.get('uid')
-            user = Account.objects.get(pk=uid)
-            user.set_password(password)
-            user.save()
-            messages.success(request, message="Password reset successful!")
-            return redirect('login')
-        else:
-            messages.error(request, message="Password do not match!")
-    return render(request, 'accounts/reset_password.html')
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'user_profile': user_profile,
+    }
+    return render(request, 'accounts/edit_profile.html', context=context)
