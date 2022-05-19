@@ -1,3 +1,5 @@
+<!--										tránh trường hợp bị hack bằng chính cookie của mình từ site bên ngoài-->
+{% csrf_token %}
 {% load static %}
 <!-- Header -->
 	<header class="header">
@@ -50,9 +52,7 @@
 						<div class="header_search">
 							<div class="header_search_content">
 								<div class="header_search_form_container">
-									<form action="{% url 'search' %}" class="header_search_form clearfix" method="POST">
-<!--										tránh trường hợp bị hack bằng chính cookie của mình từ site bên ngoài-->
-										{% csrf_token %}
+									<form action="{% url 'search' ' '%}" class="header_search_form clearfix" method="POST">
 
 <!--										Nhập tên sản phẩm hoặc cái gì đó của sản phẩm cần tìm-->
 										<input type="search" required="required" class="header_search_input" placeholder="Tìm kiếm sản phẩm" aria-label="Search" name="searching">
@@ -64,7 +64,7 @@
 												<i class="fas fa-chevron-down"></i>
 												<ul class="custom_list clc">
 													{% for category in links %}
-													<li><a class="clc" href="#">{{category.category_name}}</a></li>
+													<li><a class="clc" href="{% url 'products_by_category' category.slug %}">{{category.category_name}}</a></li>
 													{% endfor %}
 												</ul>
 											</div>
@@ -125,7 +125,7 @@
 								</div>
 								<ul class="cat_menu">
 									{% for category in links %}
-										<li><a href="#">{{category.category_name}}<i class="fas fa-chevron-right"></i></a></li>
+										<li><a href="{% url 'products_by_category' category.slug %}">{{category.category_name}}<i class="fas fa-chevron-right"></i></a></li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -138,19 +138,11 @@
 									<li class="hassubs">
 										<a href="#">Hãng nổi bật<i class="fas fa-chevron-down"></i></a>
 										<ul>
-											<li>
-												<a href="#">Apple<i class="fas fa-chevron-down"></i></a>
-												<ul>
-													<li><a href="#">Iphone<i class="fas fa-chevron-down"></i></a></li>
-													<li><a href="#">Ipad<i class="fas fa-chevron-down"></i></a></li>
-												</ul>
-											</li>
-											<li>
-												<a href="#">SamSung<i class="fas fa-chevron-down"></i></a>
-											</li>
-											<li><a href="#">Oppo<i class="fas fa-chevron-down"></i></a></li>
-											<li><a href="#">Xiaomi<i class="fas fa-chevron-down"></i></a></li>
-											<li><a href="#">VSmart<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Apple'%}">Apple<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'SamSung'%}">SamSung<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Oppo'%}">Oppo<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Xiaomi'%}">Xiaomi<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'VSmart'%}">VSmart<i class="fas fa-chevron-down"></i></a></li>
 										</ul>
 									</li>
 									<li><a href="blog.html">Khám phá<i class="fas fa-chevron-down"></i></a></li>

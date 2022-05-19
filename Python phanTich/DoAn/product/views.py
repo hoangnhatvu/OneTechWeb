@@ -1,3 +1,7 @@
+from django.shortcuts import get_object_or_404, render
+from django.core.paginator import Paginator
+from product.models import Product, Category
+
 from order.models import OrderProduct
 from django.contrib import messages
 from product.forms import ReviewForm
@@ -9,7 +13,6 @@ from product.models import Product, ReviewRating
 from cart.models import Cart, CartItem
 from product.models import Category
 from cart.views import _cart_id
-
 
 def store(request, category_slug=None):
     if category_slug is not None:
@@ -60,11 +63,14 @@ def product_detail(request, category_slug, product_slug=None):
     return render(request, 'product/product_detail.html', context=context)
 
 
-def search(request):
+def search(request, description = None):
     if request.method == 'POST':
         seaching = request.POST['searching']
         if seaching:
-            products = Product.objects.order_by('-created_date').filter(Q(description__icontains = seaching) | Q(product_name__icontains = seaching))
+            products = Product.objects.order_by('-created_date').filter(
+                Q(description__icontains = seaching)
+                | Q(product_name__icontains = seaching)
+            )
         else:
             products = Product.objects.all()
         product_count = products.count()
@@ -73,6 +79,19 @@ def search(request):
             'product_count': product_count,
         }
         return render(request, 'store/store.html', context)
+
+    elif description:
+        products = Product.objects.order_by('-created_date').filter(
+            Q(description__icontains=description)
+            | Q(product_name__icontains=description)
+        )
+        products_count = products.count()
+        context = {
+            'products': products,
+            'product_count': products_count,
+        }
+        return render(request, 'store/store.html', context)
+
     else:
         return render(request, 'store/store.html', {})
 

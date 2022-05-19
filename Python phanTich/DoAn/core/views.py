@@ -21,6 +21,8 @@ def store(request,category_slug=None):
         'product_count': product_count,
     }
     return render(request, 'store/store.html', context = context)
+
+
 def HomeView(request):
     products = Product.objects.all().filter(is_available=True)
     context = {
