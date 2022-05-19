@@ -14,18 +14,14 @@
 						<div class="top_bar_contact_item"><div class="top_bar_icon"><img src="{% static 'images/mail.png' %}" alt=""></div><a href="mailto:hoangnhatvu35202@gmail.com">hoangnhatvu35202@gmai.com</a></div>
 						<div class="top_bar_content ml-auto">
 							<div class="top_bar_user">
-								{% if request.session.customer %}
-									{% for customer in customers %}
-										{% if customer.id == request.session.customer %}
-										<div class="user_icon"><img src="{% static 'images/user.svg' %}" alt=""></div>
-										<div><a href="#">{{customer.last_name}}</a></div>
-										<div><a href="/logout">Đăng xuất</a></div>
-										{% endif %}
-									{% endfor %}
-								{% else %}
+								{% if user.id is None %}
 								<div class="user_icon"><img src="{% static 'images/user.svg' %}" alt=""></div>
 								<div><a href="{% url 'register' %}">Đăng ký</a></div>
 								<div><a href="{% url 'login' %}">Đăng nhập</a></div>
+								{% else %}
+								<div class="user_icon"><img src="{% static 'images/user.svg' %}" alt=""></div>
+								<div><a href="{% url 'dashboard' %}">{{user.first_name}}</a></div>
+								<div><a href="{% url 'logout' %}">Đăng xuất</a></div>
 								{% endif %}
 							</div>
 						</div>

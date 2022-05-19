@@ -7,6 +7,7 @@
 <link href="{% static 'css/ui.css' %}" rel="stylesheet" type="text/css" />
 <link href="{% static 'css/responsive.css' %}" rel="stylesheet" media="only screen and (max-width: 1200px)" />
 <link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block content %}
@@ -14,10 +15,10 @@
 	<div class="container">
 
 		{% if not cart_items %}
-		<h2 class="text-center">Your shopping cart is empty</h2>
+		<h2 class="text-center">Giỏ hàng của bạn chưa có sản phẩm nào</h2>
 		<br />
 		<div class="text-center">
-			<a href="{% url 'store' %}" class="btn btn-primary">Continue Shopping</a>
+			<a href="{% url 'store' %}" class="btn btn-primary">Tiếp tục mua sắm</a>
 		</div>
 		{% else %}
 		<div class="row">
@@ -26,9 +27,9 @@
 					<table class="table table-borderless table-shopping-cart">
 						<thead class="text-muted">
 							<tr class="small text-uppercase">
-								<th scope="col">Product</th>
-								<th scope="col" width="120">Quantity</th>
-								<th scope="col" width="120">Price</th>
+								<th scope="col">Sản phẩm</th>
+								<th scope="col" width="120">Số lượng</th>
+								<th scope="col" width="120">Giá</th>
 								<th scope="col" class="text-right" width="200"></th>
 							</tr>
 						</thead>
@@ -85,15 +86,15 @@
 									<div class="price-wrap">
 										<var class="price">${{ cart_item.sub_total }}</var>
 										<small class="text-muted">
-											${{ cart_item.product.price }} each
+											đơn giá: ${{ cart_item.product.price }}
 										</small>
 									</div>
 									<!-- price-wrap .// -->
 								</td>
 								<td class="text-right">
 									<a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}"
-										class="btn btn-danger" onclick="return confirm('Are you sure?')">
-										Remove</a>
+										class="btn btn-danger" onclick="return confirm('Bạn chắc chắn chứ?')">
+										Xóa</a>
 								</td>
 							</tr>
 							{% endfor %}
@@ -107,15 +108,15 @@
 				<div class="card">
 					<div class="card-body">
 						<dl class="dlist-align">
-							<dt>Total price:</dt>
+							<dt>Tổng tiền:</dt>
 							<dd class="text-right">${{ total }}</dd>
 						</dl>
 						<dl class="dlist-align">
-							<dt>Tax:</dt>
+							<dt>Phí vận chuyển:</dt>
 							<dd class="text-right">${{ tax }}</dd>
 						</dl>
 						<dl class="dlist-align">
-							<dt>Total:</dt>
+							<dt>Thành tiền:</dt>
 							<dd class="text-right text-dark b">
 								<strong>${{ grand_total }}</strong>
 							</dd>
@@ -125,9 +126,9 @@
 							<img src="{% static 'images/misc/payments.png' %}" height="26" />
 						</p>
 						<a href="{% url 'checkout' %}" class="btn btn-primary btn-block">
-							Checkout
+							Thanh toán
 						</a>
-						<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
+						<a href="{% url 'store' %}" class="btn btn-light btn-block">Tiếp tục mua sắm</a>
 					</div>
 					<!-- card-body.// -->
 				</div>
@@ -146,4 +147,7 @@
 {% block js %}
 <script src="{% static 'plugins/easing/easing.js' %}"></script>
 <script src="{% static 'js/cart_custom.js' %}"></script>
+<script src="{% static 'js/jquery-2.0.0.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/script.js' %}" type="text/javascript"></script>
 {% endblock %}

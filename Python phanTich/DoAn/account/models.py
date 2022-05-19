@@ -6,10 +6,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class MyAccountManager(BaseUserManager):
     def create_user(self, first_name, last_name, username, email, password=None):
         if not email:
-            raise ValueError('Email address is required')
+            raise ValueError('Bạn chưa nhập địa chỉ email')
 
         if not username:
-            raise ValueError('User name is required')
+            raise ValueError('Bạn chưa nhập username !')
 
         # Tạo đối tượng user mới
         user = self.model(
@@ -64,10 +64,25 @@ class Account(AbstractBaseUser):
         return self.email
 
     def has_perm(self, perm, obj=None):
-        return self.is_admin    # Admin có tất cả quyền trong hệ thống
+        return self.is_admin
 
     def has_module_perms(self, add_label):
         return True
 
     def full_name(self):
-        return self.first_name + " " + self.last_name
+        return self.last_name + " " + self.first_name
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    address_line_1 = models.CharField(blank=True, max_length=100)
+    address_line_2 = models.CharField(blank=True, max_length=100)
+    profile_picture = models.ImageField(blank=True, upload_to='user_profile/')
+    city = models.CharField(blank=True, max_length=20)
+    state = models.CharField(blank=True, max_length=20)
+    pin_code = models.IntegerField(blank=True)
+
+    def __str__(self):
+        return self.user.first_name
+
+    def full_address(self):
+        return f'{self.address_line_1} {self.address_line_2}'
