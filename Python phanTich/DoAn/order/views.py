@@ -19,9 +19,7 @@ def sendEmail(request, order):
     send_email = EmailMessage(mail_subject, message, to=[to_email])
     send_email.send()
 
-
 def payments(request):
-    print("fskdfhkdshfkjdshfkjdshfkjdshfkjsdhfjkshdfjkhsdjkfhsdjkfhjkdhfjkdshfjksdhfjkdhfjkshdfjkshdfjkhsdkfjh")
     try:
         if request.method == 'POST':
             data = request.POST
@@ -86,7 +84,7 @@ def payments(request):
         return JsonResponse({"error": e}, status=400)
 
 
-def place_order(request, total=0, quantity=0,):
+def place_order(request, total=0, quantity=0):
     current_user = request.user
 
     cart_items = CartItem.objects.filter(user=current_user)
@@ -112,7 +110,6 @@ def place_order(request, total=0, quantity=0,):
             data.email = form.cleaned_data['email']
             data.address_line_1 = form.cleaned_data['address_line_1']
             data.address_line_2 = form.cleaned_data['address_line_2']
-            data.country = form.cleaned_data['country']
             data.state = form.cleaned_data['state']
             data.city = form.cleaned_data['city']
             data.order_note = form.cleaned_data['order_note']
@@ -125,7 +122,7 @@ def place_order(request, total=0, quantity=0,):
             dt = int(datetime.date.today().strftime('%d'))
             mt = int(datetime.date.today().strftime('%m'))
             d = datetime.date(yr, mt, dt)
-            current_date = d.strftime("%Y%m%d")     # 20210305
+            current_date = d.strftime("%Y%m%d")
             order_number = current_date + str(data.id)
             data.order_number = order_number
             data.save()

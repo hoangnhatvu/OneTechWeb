@@ -197,7 +197,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         'total': total,
         'quantity': quantity,
         'cart_items': cart_items,
-        'tax': tax if "tax" in locals() else "",
+        'ship': tax if "tax" in locals() else "",
         'grand_total': grand_total,
         'user': user,
         'user_profile': user_profile,
