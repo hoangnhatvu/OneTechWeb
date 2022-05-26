@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models import Q
 
 # Create your models here.
 class Blog_Single(models.Model):

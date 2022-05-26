@@ -4,7 +4,6 @@
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{% static 'plugins/OwlCarousel2-2.2.1/animate.css' %}"><link rel="stylesheet" type="text/css" href="{% static 'plugins/slick-1.8.0/slick.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'plugins/slick-1.8.0/slick.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
 {% endblock %}
 
@@ -2310,7 +2309,7 @@
 									<div class="trends_content">
 										<div class="trends_category"><a href="#">{{product.category}}</a></div>
 										<div class="trends_info clearfix">
-											<div class="trends_name"><a href="{{product.get_url}}">{{product.product_name}}</a></div>
+											<div class="trends_name"><a href="{{product.get_url}}"><a {{product.product_name}}</a> </div>
 											<div class="trends_price">${{product.price}}</div>
 										</div>
 									</div>
@@ -2445,7 +2444,6 @@
 {% endblock %}
 
 {% block js %}
-<script src="{% static 'plugins/slick-1.8.0/slick.js' %}"></script>
 <script src="{% static 'plugins/slick-1.8.0/slick.js' %}"></script>
 <script src="{% static 'plugins/easing/easing.js' %}"></script>
 <script src="{% static 'js/custom.js' %}"></script>

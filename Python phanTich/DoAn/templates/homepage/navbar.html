@@ -19,6 +19,7 @@
 								{% else %}
 								<div class="user_icon"><img src="{% static 'images/user.svg' %}" alt=""></div>
 								<div><a href="{% url 'dashboard' %}">{{user.first_name}}</a></div>
+								<div><a href="{% url 'dashboard' %}">{{user.first_name}}</a></div>
 								<div><a href="{% url 'logout' %}">Đăng xuất</a></div>
 								{% endif %}
 							</div>
@@ -46,19 +47,26 @@
 						<div class="header_search">
 							<div class="header_search_content">
 								<div class="header_search_form_container">
-									<form action="#" class="header_search_form clearfix">
-										<input type="search" required="required" class="header_search_input" placeholder="Tìm kiếm sản phẩm">
+									<form action="{% url 'search' ' '%}" class="header_search_form clearfix" method="POST">
+										{% csrf_token %}
+
+<!--										Nhập tên sản phẩm hoặc cái gì đó của sản phẩm cần tìm-->
+										<input type="search" required="required" class="header_search_input" placeholder="Tìm kiếm sản phẩm" aria-label="Search" name="searching">
+
+
 										<div class="custom_dropdown">
 											<div class="custom_dropdown_list">
 												<span class="custom_dropdown_placeholder clc">Tất cả sản phẩm</span>
 												<i class="fas fa-chevron-down"></i>
 												<ul class="custom_list clc">
 													{% for category in links %}
-													<li><a class="clc" href="#">{{category.category_name}}</a></li>
+													<li><a class="clc" href="{% url 'products_by_category' category.slug %}">{{category.category_name}}</a></li>
 													{% endfor %}
 												</ul>
 											</div>
 										</div>
+
+<!--										button hình kính lúp-->
 										<button type="submit" class="header_search_button trans_300" value="Submit"><img src="{% static 'images/search.png' %}" alt=""></button>
 									</form>
 								</div>
@@ -73,6 +81,7 @@
 								<div class="wishlist_icon"><img src="{% static 'images/heart.png' %}" alt=""></div>
 								<div class="wishlist_content">
 									<div class="wishlist_text"><a href="#">Yêu thích</a></div>
+									<div class="wishlist_count">115</div>
 								</div>
 							</div>
 
@@ -112,7 +121,7 @@
 								</div>
 								<ul class="cat_menu">
 									{% for category in links %}
-										<li><a href="#">{{category.category_name}}<i class="fas fa-chevron-right"></i></a></li>
+										<li><a href="{% url 'products_by_category' category.slug %}">{{category.category_name}}<i class="fas fa-chevron-right"></i></a></li>
 									{% endfor %}
 								</ul>
 							</div>
@@ -125,22 +134,16 @@
 									<li class="hassubs">
 										<a href="#">Hãng nổi bật<i class="fas fa-chevron-down"></i></a>
 										<ul>
-											<li>
-												<a href="#">Menu Item<i class="fas fa-chevron-down"></i></a>
-												<ul>
-													<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-													<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-													<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-												</ul>
-											</li>
-											<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-											<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-											<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Apple'%}">Apple<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'SamSung'%}">SamSung<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Oppo'%}">Oppo<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Xiaomi'%}">Xiaomi<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'VSmart'%}">VSmart<i class="fas fa-chevron-down"></i></a></li>
 										</ul>
 									</li>
 									<li><a href="{% url 'blog' %}">Khám phá<i class="fas fa-chevron-down"></i></a></li>
-									<li><a href="{% url 'contact' %}">Liên hệ<i class="fas fa-chevron-down"></i></a></li>
-									<li><a href="">Về chúng tôi<i class="fas fa-chevron-down"></i></a></li>
+									<li><a href="contact.html">Liên hệ<i class="fas fa-chevron-down"></i></a></li>
+									<li><a href="contact.html">Về chúng tôi<i class="fas fa-chevron-down"></i></a></li>
 								</ul>
 							</div>
 

@@ -10,7 +10,6 @@ from product.models import Product, ReviewRating, Category
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
 
-
 def store(request, category_slug=None):
     if category_slug is not None:
         categories = get_object_or_404(Category, slug=category_slug)
@@ -63,17 +62,39 @@ def product_detail(request, category_slug, product_slug=None):
     return render(request, 'product/product_detail.html', context=context)
 
 
-def search(request):
-    if 'q' in request.GET:
-        q = request.GET.get('q')
-        products = Product.objects.order_by('-created_date').filter(Q(product_name__icontains=q) | Q(description__icontains=q))
+def search(request, description):
+    if request.method == 'POST':
+        seaching = request.POST['searching']
+        if seaching:
+            products = Product.objects.order_by('-created_date').filter(
+                Q(description__icontains=seaching)
+                | Q(product_name__icontains=seaching)
+                | Q(firm__icontains=seaching)
+            )
+        else:
+            products = Product.objects.all()
         product_count = products.count()
-    context = {
-        'products': products,
-        'q': q,
-        'product_count': product_count
-    }
-    return render(request, 'store/store.html', context=context)
+        context = {
+            'products': products,
+            'product_count': product_count,
+        }
+        return render(request, 'store/store.html', context)
+
+    elif description:
+        products = Product.objects.order_by('-created_date').filter(
+            Q(description__icontains=description)
+            | Q(product_name__icontains=description)
+            | Q(firm__icontains=description)
+        )
+        products_count = products.count()
+        context = {
+            'products': products,
+            'product_count': products_count,
+        }
+        return render(request, 'store/store.html', context)
+
+    else:
+        return render(request, 'store/store.html', {})
 
 
 def submit_review(request, product_id):
