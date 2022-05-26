@@ -1,3 +1,7 @@
+from django.shortcuts import get_object_or_404, render
+from django.core.paginator import Paginator
+from product.models import Product, Category
+
 from order.models import OrderProduct
 from django.contrib import messages
 from product.forms import ReviewForm
@@ -62,14 +66,23 @@ def product_detail(request, category_slug, product_slug=None):
     return render(request, 'product/product_detail.html', context=context)
 
 
+<<<<<<< HEAD
 def search(request, description):
+=======
+def search(request, description = None):
+>>>>>>> ea204b3d38bcb43884b9557e2c7a9d93e4591eee
     if request.method == 'POST':
         seaching = request.POST['searching']
         if seaching:
             products = Product.objects.order_by('-created_date').filter(
+<<<<<<< HEAD
                 Q(description__icontains=seaching)
                 | Q(product_name__icontains=seaching)
                 | Q(firm__icontains=seaching)
+=======
+                Q(description__icontains = seaching)
+                | Q(product_name__icontains = seaching)
+>>>>>>> ea204b3d38bcb43884b9557e2c7a9d93e4591eee
             )
         else:
             products = Product.objects.all()
@@ -79,6 +92,7 @@ def search(request, description):
             'product_count': product_count,
         }
         return render(request, 'store/store.html', context)
+<<<<<<< HEAD
 
     elif description:
         products = Product.objects.order_by('-created_date').filter(
@@ -95,7 +109,23 @@ def search(request, description):
 
     else:
         return render(request, 'store/store.html', {})
+=======
+>>>>>>> ea204b3d38bcb43884b9557e2c7a9d93e4591eee
 
+    elif description:
+        products = Product.objects.order_by('-created_date').filter(
+            Q(description__icontains=description)
+            | Q(product_name__icontains=description)
+        )
+        products_count = products.count()
+        context = {
+            'products': products,
+            'product_count': products_count,
+        }
+        return render(request, 'store/store.html', context)
+
+    else:
+        return render(request, 'store/store.html', {})
 
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER')

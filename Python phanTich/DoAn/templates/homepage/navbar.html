@@ -1,3 +1,5 @@
+<!--										tránh trường hợp bị hack bằng chính cookie của mình từ site bên ngoài-->
+{% csrf_token %}
 {% load static %}
 <!-- Header -->
 	<header class="header">
@@ -48,7 +50,10 @@
 							<div class="header_search_content">
 								<div class="header_search_form_container">
 									<form action="{% url 'search' ' '%}" class="header_search_form clearfix" method="POST">
+<<<<<<< HEAD
 										{% csrf_token %}
+=======
+>>>>>>> ea204b3d38bcb43884b9557e2c7a9d93e4591eee
 
 <!--										Nhập tên sản phẩm hoặc cái gì đó của sản phẩm cần tìm-->
 										<input type="search" required="required" class="header_search_input" placeholder="Tìm kiếm sản phẩm" aria-label="Search" name="searching">
