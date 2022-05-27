@@ -203,7 +203,7 @@
                         },
 					success: function(response) {
 						data = response.data;
-						alert('Transaction completed by ' + details.payer.name.given_name + '!');
+						alert('Transaction completed !');
 						window.location.href = redirectUrl + '?order_number=' + data["order_number"] + '&payment_id=' + data["transID"];
 					},
 					error: function(response) {

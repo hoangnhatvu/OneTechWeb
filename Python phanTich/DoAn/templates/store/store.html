@@ -11,7 +11,7 @@
 {% block content %}
 <div class="super_container">
 	<div class="home">
-		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="images/shop_background.jpg"></div>
+		<div class="home_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/shop_background.jpg' %}"></div>
 		<div class="home_overlay"></div>
 		<div class="home_content d-flex flex-column align-items-center justify-content-center">
 			<h2 class="home_title">Tất cả sản phẩm</h2>
@@ -31,7 +31,7 @@
 							<div class="sidebar_title">Danh mục</div>
 							<ul class="sidebar_categories">
 								{% for category in links %}
-									<li><a href="#">{{category.category_name}}</a></li>
+									<li><a href="{% url 'products_by_category' category.slug %}">{{category.category_name}}</a></li>
 								{% endfor %}
 							</ul>
 						</div>
@@ -80,7 +80,7 @@
 
 						<div class="product_grid">
 							<div class="product_grid_border"></div>
-							{% for product in products %}
+							{% for product in paged_products %}
 							<!-- Product Item -->
 							<div class="product_item">
 								<div class="product_border"></div>
@@ -117,20 +117,68 @@
 
 						<!-- Shop Page Navigation -->
 
-						<div class="shop_page_nav d-flex flex-row">
-							<div class="page_prev d-flex flex-column align-items-center justify-content-center"><i class="fas fa-chevron-left"></i></div>
-							<ul class="page_nav d-flex flex-row">
-								<li><a href="#">1</a></li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">...</a></li>
-								<li><a href="#">21</a></li>
+						{% if paged_products %}
+						<nav class="mt-4" aria-label="Page navigation sample">
+							<ul class="pagination">
+								{% if paged_products.has_previous %}
+								<li class="page-item">
+									<a class="page-link" href="{% url 'store' %}?page=1"><<</a>
+								</li>
+								<li class="page-item">
+									<a class="page-link"
+										href="{% url 'store' %}?page={{paged_products.previous_page_number}}"><</a>
+								</li>
+								{% else %}
+								<li class="page-item disabled">
+									<a class="page-link" href="#"><<</a>
+								</li>
+								<li class="page-item disabled">
+									<a class="page-link" href="#"><</a>
+								</li>
+								{% endif %}
+								{% if paged_products.number|add:'-2' >= 1 %}
+								<li class="page-item">
+									<a class="page-link" href="{% url 'store' %}?page={{ paged_products.number|add:'-2' }}">&hellip;</a>
+								</li>
+								{% endif %}
+								{% for page in paged_products.paginator.page_range %}
+								{% if paged_products.number|add:'-1' <= page and page <= paged_products.number|add:'1' %}
+								{% if page == paged_products.number %}
+								<li class="page-item active">
+									<a class="page-link" href="{% url 'store' %}?page={{ page }}">{{ page }}</a>
+								</li>
+								{% else %}
+								<li class="page-item">
+									<a class="page-link" href="{% url 'store' %}?page={{ page }}">{{ page }}</a>
+								</li>
+								{% endif %}
+								{% endif %}
+								{% endfor %}
+								{% if paged_products.number|add:'2' <= paged_products.paginator.num_pages %}
+								<li class="page-item">
+									<a class="page-link" href="{% url 'store' %}?page={{ paged_products.number|add:'2' }}">&hellip;</a>
+								</li>
+								{% endif %}
+								{% if paged_products.has_next %}
+								<li class="page-item">
+									<a class="page-link" href="{% url 'store' %}?page={{paged_products.next_page_number}}">></a>
+								</li>
+								<li class="page-item">
+									<a class="page-link"
+										href="{% url 'store' %}?page={{ paged_products.paginator.num_pages }}">>></a>
+								</li>
+								{% else %}
+								<li class="page-item disabled">
+									<a class="page-link" href="#">></a>
+								</li>
+								<li class="page-item disabled">
+									<a class="page-link" href="#">>></a>
+								</li>
+								{% endif %}
 							</ul>
-							<div class="page_next d-flex flex-column align-items-center justify-content-center"><i class="fas fa-chevron-right"></i></div>
-						</div>
-
+						</nav>
+						{% endif %}
 					</div>
-
 				</div>
 			</div>
 		</div>

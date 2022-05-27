@@ -106,7 +106,7 @@
 								</div>
 								<ul class="cat_menu">
 									{% for category in links %}
-										<li><a href="#">{{category.category_name}}<i class="fas fa-chevron-right"></i></a></li>
+										<li><a href="{% url 'products_by_category' category.slug %}">{{category.category_name}}<i class="fas fa-chevron-right"></i></a></li>
 									{% endfor %}
 								</ul>
 							</div>

@@ -12,7 +12,6 @@
 <script src="{% static 'js/jquery-2.0.0.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/script.js' %}" type="text/javascript"></script>
-
 {% endblock %}
 
 {% block content %}
@@ -67,31 +66,6 @@
 						<div class="order_info d-flex flex-row">
 							<form action="{% url 'add_cart' single_product.id %}" method="POST">
 								{% csrf_token %}
-								<div class="clearfix" style="z-index: 1000;">
-									<!-- Product Quantity -->
-									<div class="product_quantity clearfix">
-										<span>Quantity: </span>
-										<input id="quantity_input" type="text" pattern="[0-9]*" value="1">
-										<div class="quantity_buttons">
-											<div id="quantity_inc_button" class="quantity_inc quantity_control"><i class="fas fa-chevron-up"></i></div>
-											<div id="quantity_dec_button" class="quantity_dec quantity_control"><i class="fas fa-chevron-down"></i></div>
-										</div>
-									</div>
-									<ul class="product_color">
-										<li>
-											<span>Color: </span>
-											<div class="color_mark_container"><div id="selected_color" class="color_mark"></div></div>
-											<div class="color_dropdown_button"><i class="fas fa-chevron-down"></i></div>
-
-											<ul class="color_list">
-												<li><div class="color_mark" style="background: #999999;"></div></li>
-												<li><div class="color_mark" style="background: #b19c83;"></div></li>
-												<li><div class="color_mark" style="background: #000000;"></div></li>
-											</ul>
-										</li>
-									</ul>
-
-								</div>
 								{% if single_product.sale_price > 0 %}
 								<div class="viewed_price">${{single_product.sale_price}}<span>${{single_product.price}}</span></div>
 								{% else %}
@@ -115,7 +89,6 @@
 									{% endif %} {% else %}
 								   <h5 class="text-danger">Hết hàng</h5>
 									  {% endif %}
-									<div class="product_fav"><div> <i onclick={handleClick}></i></div><i class="fas fa-heart"></i></div>
 								</div>
 
 							</form>
