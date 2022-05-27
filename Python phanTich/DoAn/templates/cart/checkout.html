@@ -106,7 +106,15 @@
                                     <td>
                                         <div class="price-wrap">
                                             <var class="price">$ {{ cart_item.sub_total }}</var>
-                                            <small class="text-muted"> đơn giá: $ {{ cart_item.product.price }}  </small>
+                                            {% if cart_item.product.sale_price > 0 %}
+                                            <small class="text-muted">
+                                                đơn giá: ${{ cart_item.product.sale_price }}
+                                            </small>
+                                            {% else %}
+                                            <small class="text-muted">
+                                                đơn giá: ${{ cart_item.product.price }}
+                                            </small>
+                                            {% endif %}
                                         </div> <!-- price-wrap .// -->
                                     </td>
                                 </tr>

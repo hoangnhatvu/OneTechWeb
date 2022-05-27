@@ -1,49 +1,6 @@
 {% load static %}
-	<!-- Recently Viewed -->
-
-	<div class="viewed">
-		<div class="container">
-			<div class="row">
-				<div class="col">
-					<div class="viewed_title_container">
-						<h3 class="viewed_title">Sản phẩm xem gần đây</h3>
-						<div class="viewed_nav_container">
-							<div class="viewed_nav viewed_prev"><i class="fas fa-chevron-left"></i></div>
-							<div class="viewed_nav viewed_next"><i class="fas fa-chevron-right"></i></div>
-						</div>
-					</div>
-
-					<div class="viewed_slider_container">
-
-						<!-- Recently Viewed Slider -->
-
-						<div class="owl-carousel owl-theme viewed_slider">
-
-							<!-- Recently Viewed Item -->
-							{% for product in list_view %}
-							<div class="owl-item">
-								<div class="viewed_item discount d-flex flex-column align-items-center justify-content-center text-center">
-									<div class="viewed_image"><img src={{product.images.url}} alt=""></div>
-									<div class="viewed_content text-center">
-										<div class="viewed_price">${{product.price}}</div>
-										<div class="viewed_name"><a href="{{product.get_url}}">{{product.product_name}}</a></div>
-									</div>
-									<ul class="item_marks">
-										<li class="item_mark item_discount">-25%</li>
-										<li class="item_mark item_new">new</li>
-									</ul>
-								</div>
-							</div>
-							{% endfor %}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- Brands -->
-
 	<div class="brands">
 		<div class="container">
 			<div class="row">
@@ -75,6 +32,48 @@
 		</div>
 	</div>
 
+	<!-- Recently Viewed -->
+
+	<div class="viewed">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<div class="viewed_title_container">
+						<h3 class="viewed_title">Sản phẩm xem gần đây</h3>
+						<div class="viewed_nav_container">
+							<div class="viewed_nav viewed_prev"><i class="fas fa-chevron-left"></i></div>
+							<div class="viewed_nav viewed_next"><i class="fas fa-chevron-right"></i></div>
+						</div>
+					</div>
+
+					<div class="viewed_slider_container">
+
+						<!-- Recently Viewed Slider -->
+
+						<div class="owl-carousel owl-theme viewed_slider">
+
+							<!-- Recently Viewed Item -->
+							{% for product in list_view %}
+							<div class="owl-item">
+								<div class="viewed_item discount d-flex flex-column align-items-center justify-content-center text-center">
+									<div class="viewed_image"><img src={{product.images.url}} alt=""></div>
+									<div class="viewed_content text-center">
+										{% if product.sale_price > 0 %}
+										<div class="viewed_price">${{product.sale_price}}<span>${{product.price}}</span></div>
+										{% else %}
+										<div class="viewed_price">${{product.price}}</div>
+										{% endif %}
+										<div class="viewed_name"><a href="{{product.get_url}}">{{product.product_name}}</a></div>
+									</div>
+								</div>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- Newsletter -->
 	<div class="newsletter">
 		<div class="container">
@@ -83,8 +82,8 @@
 					<div class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
 						<div class="newsletter_title_container">
 							<div class="newsletter_icon"><img src="{% static 'images/send.png' %}" alt=""></div>
-							<div class="newsletter_title">Sign up for Newsletter</div>
-							<div class="newsletter_text"><p>...and receive %20 coupon for first shopping.</p></div>
+							<div class="newsletter_title">HPTV SHOP</div>
+							<div class="newsletter_text"><p>..đồng hành cùng bạn trong từng bước tiến công nghệ ! </p></div>
 						</div>
 					</div>
 				</div>
@@ -92,7 +91,7 @@
 		</div>
 	</div>
 
-	<!-- footer -->
+<!-- footer -->
 	<footer class="footer">
 		<div class="container">
 			<div class="row">
@@ -110,10 +109,9 @@
 						</div>
 						<div class="footer_social">
 							<ul>
-								<li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-								<li><a href="#"><i class="fab fa-instagram"></i></a></li>
-								<li><a href="#"><i class="fab fa-github"></i></a></li>
-								<li><a href="#"><i class="fab fa-youtube"></i></a></li>
+								<li><a href="https://www.facebook.com/h.n.v.352"><i class="fab fa-facebook-f"></i></a></li>
+								<li><a href="https://www.instagram.com/khowfsix/?hl=en"><i class="fab fa-instagram"></i></a></li>
+								<li><a href="https://github.com/hoangnhatvu/DoAnPython.git"><i class="fab fa-github"></i></a></li>
 							</ul>
 						</div>
 					</div>
@@ -121,44 +119,35 @@
 
 				<div class="col-lg-2 offset-lg-2">
 					<div class="footer_column">
-						<div class="footer_title">Find it Fast</div>
+						<div class="footer_title">Nhóm 1</div>
 						<ul class="footer_list">
-							<li><a href="#">Computers & Laptops</a></li>
-							<li><a href="#">Cameras & Photos</a></li>
-							<li><a href="#">Hardware</a></li>
-							<li><a href="#">Smartphones & Tablets</a></li>
-							<li><a href="#">TV & Audio</a></li>
-						</ul>
-						<div class="footer_subtitle">Gadgets</div>
+							<li><a href="https://www.facebook.com/ZhhinHua">Chau Chhin Hua</a></li>
+							<li><a href="https://www.facebook.com/profile.php?id=100013968708709">Lý Hồng Phát</a></li>
+							<li><a href="https://www.facebook.com/thuytrang.phungthi.16">Phùng Thị Thùy Trang</a></li>
+							<li><a href="https://www.facebook.com/h.n.v.352">Hoàng Nhất Vũ</a></li>
+					</div>
+				</div>
+
+				<div class="col-lg-2">
+					<div class="footer_column">
+						<div class="footer_title">MSSV</div>
 						<ul class="footer_list">
-							<li><a href="#">Car Electronics</a></li>
+							<li><a href="mailto:20110646@student.hcmute.edu.vn">20110646</a></li>
+							<li><a href="mailto:20110692@student.hcmute.edu.vn">20110692</a></li>
+							<li><a href="mailto:20110313@student.hcmute.edu.vn">20110313</a></li>
+							<li><a href="mailto:20110751@student.hcmute.edu.vn">20110751</a></li>
 						</ul>
 					</div>
 				</div>
 
 				<div class="col-lg-2">
 					<div class="footer_column">
-						<ul class="footer_list footer_list_2">
-							<li><a href="#">Video Games & Consoles</a></li>
-							<li><a href="#">Accessories</a></li>
-							<li><a href="#">Cameras & Photos</a></li>
-							<li><a href="#">Hardware</a></li>
-							<li><a href="#">Computers & Laptops</a></li>
-						</ul>
-					</div>
-				</div>
-
-				<div class="col-lg-2">
-					<div class="footer_column">
-						<div class="footer_title">Customer Care</div>
+						<div class="footer_title">Nhập môn lập trình Python cho phân tích</div>
 						<ul class="footer_list">
-							<li><a href="#">My Account</a></li>
-							<li><a href="#">Order Tracking</a></li>
-							<li><a href="#">Wish List</a></li>
-							<li><a href="#">Customer Services</a></li>
-							<li><a href="#">Returns / Exchange</a></li>
-							<li><a href="#">FAQs</a></li>
-							<li><a href="#">Product Support</a></li>
+							<ul class="footer_list">
+							<li><a href="#">Mã học phần: 212IPPA233277</a></li>
+							<li><a href="#">GVHD: Ths. Nguyễn Văn Thành</a></li>
+						</ul>
 						</ul>
 					</div>
 				</div>

@@ -9,7 +9,7 @@
 				<div class="row">
 					<div class="col d-flex flex-row">
 						<div class="top_bar_contact_item"><div class="top_bar_icon"><img src="{% static 'images/phone.png' %}" alt=""></div>+84 397611383</div>
-						<div class="top_bar_contact_item"><div class="top_bar_icon"><img src="{% static 'images/mail.png' %}" alt=""></div><a href="mailto:hoangnhatvu35202@gmail.com">hoangnhatvu35202@gmai.com</a></div>
+						<div class="top_bar_contact_item"><div class="top_bar_icon"><img src="{% static 'images/mail.png' %}" alt=""></div><a href="mailto:hoangnhatvu350800@gmail.com">hoangnhatvu350800@gmai.com</a></div>
 						<div class="top_bar_content ml-auto">
 							<div class="top_bar_user">
 								{% if user.id is None %}
@@ -46,19 +46,20 @@
 						<div class="header_search">
 							<div class="header_search_content">
 								<div class="header_search_form_container">
-									<form action="#" class="header_search_form clearfix">
-										<input type="search" required="required" class="header_search_input" placeholder="Tìm kiếm sản phẩm">
+									<form action="{% url 'search' ' '%}" class="header_search_form clearfix" method="POST">
+										{% csrf_token %}
+<!--										Nhập tên sản phẩm hoặc cái gì đó của sản phẩm cần tìm-->
+										<input type="search" required="required" class="header_search_input" placeholder="Tìm kiếm sản phẩm" aria-label="Search" name="searching">
+
 										<div class="custom_dropdown">
 											<div class="custom_dropdown_list">
 												<span class="custom_dropdown_placeholder clc">Tất cả sản phẩm</span>
-												<i class="fas fa-chevron-down"></i>
 												<ul class="custom_list clc">
-													{% for category in links %}
-													<li><a class="clc" href="#">{{category.category_name}}</a></li>
-													{% endfor %}
 												</ul>
 											</div>
 										</div>
+
+<!--										button hình kính lúp-->
 										<button type="submit" class="header_search_button trans_300" value="Submit"><img src="{% static 'images/search.png' %}" alt=""></button>
 									</form>
 								</div>
@@ -69,13 +70,6 @@
 					<!-- Wishlist -->
 					<div class="col-lg-4 col-9 order-lg-3 order-2 text-lg-left text-right">
 						<div class="wishlist_cart d-flex flex-row align-items-center justify-content-end">
-							<div class="wishlist d-flex flex-row align-items-center justify-content-end">
-								<div class="wishlist_icon"><img src="{% static 'images/heart.png' %}" alt=""></div>
-								<div class="wishlist_content">
-									<div class="wishlist_text"><a href="#">Yêu thích</a></div>
-								</div>
-							</div>
-
 							<!-- Cart -->
 							<div class="cart">
 								<div class="cart_container d-flex flex-row align-items-center justify-content-end">
@@ -125,22 +119,16 @@
 									<li class="hassubs">
 										<a href="#">Hãng nổi bật<i class="fas fa-chevron-down"></i></a>
 										<ul>
-											<li>
-												<a href="#">Menu Item<i class="fas fa-chevron-down"></i></a>
-												<ul>
-													<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-													<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-													<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-												</ul>
-											</li>
-											<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-											<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-											<li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Apple'%}">Apple<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'SamSung'%}">SamSung<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Oppo'%}">Oppo<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'Xiaomi'%}">Xiaomi<i class="fas fa-chevron-down"></i></a></li>
+											<li><a href="{% url 'search' 'VSmart'%}">VSmart<i class="fas fa-chevron-down"></i></a></li>
 										</ul>
 									</li>
 									<li><a href="{% url 'blog' %}">Khám phá<i class="fas fa-chevron-down"></i></a></li>
 									<li><a href="{% url 'contact' %}">Liên hệ<i class="fas fa-chevron-down"></i></a></li>
-									<li><a href="">Về chúng tôi<i class="fas fa-chevron-down"></i></a></li>
+									<li><a href=#>Về chúng tôi<i class="fas fa-chevron-down"></i></a></li>
 								</ul>
 							</div>
 

@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 
 
 def sendEmail(request, order):
-    mail_subject = 'Thank you for your order!'
+    mail_subject = 'Cảm ơn bạn đã đặt hàng!'
     message = render_to_string('order/order_recieved_email.html', {
         'user': request.user,
         'order': order
@@ -53,7 +53,7 @@ def payments(request):
                 order_product.user_id = request.user.id
                 order_product.product_id = item.product_id
                 order_product.quantity = item.quantity
-                order_product.product_price = item.product.price
+                order_product.product_price = item.product.get_price()
                 order_product.ordered = True
                 order_product.save()
 
@@ -66,6 +66,7 @@ def payments(request):
                 # Reduce the quantity of the sold products
                 product = Product.objects.get(id=item.product_id)
                 product.stock -= item.quantity
+                product.num_order += item.quantity
                 product.save()
 
             # Xóa hết cart_item
@@ -94,7 +95,7 @@ def place_order(request, total=0, quantity=0):
     grand_total = 0
     tax = 0
     for cart_item in cart_items:
-        total += (cart_item.product.price * cart_item.quantity)
+        total += (cart_item.product.get_price() * cart_item.quantity)
         quantity += cart_item.quantity
     tax = (2 * total) / 100
     grand_total = total + tax
@@ -146,7 +147,6 @@ def order_complete(request):
     try:
         order = Order.objects.get(order_number=order_number, is_ordered=True)
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
-
         subtotal = 0
         for i in ordered_products:
             subtotal += i.product_price * i.quantity

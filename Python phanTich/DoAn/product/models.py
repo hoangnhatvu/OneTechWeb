@@ -22,17 +22,26 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(max_length=500, blank=True)
     price = models.IntegerField()
+    sale_price = models.IntegerField(default=0)
     images = models.ImageField(upload_to='photos/products')
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    num_visit = models.IntegerField(default = 0)
-    last_visit = models.DateTimeField(blank = True, null=True)
+    firm = models.CharField(max_length=50, blank=True, null=True)
+    num_order = models.IntegerField(default=0)
+    num_visit = models.IntegerField(default=0)
+    last_visit = models.DateTimeField(blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
     def get_url(self):
         return reverse('product_detail', args=[self.category.slug, self.slug])
+
+    def get_price(self):
+        if self.sale_price > 0:
+            return self.sale_price
+        else:
+            return self.price
 
     def __str__(self):
         return self.product_name

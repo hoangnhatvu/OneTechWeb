@@ -13,19 +13,20 @@ def store(request,category_slug=None):
     page = page or 1
     paginator = Paginator(products, 3)
     paged_products = paginator.get_page(page)
-    product_count = products.count()
 
     context = {
-        'products': paged_products,
-        'product_count': product_count,
+        'paged_products': paged_products,
+        'products': products,
     }
     return render(request, 'store/store.html', context = context)
 def HomeView(request):
     products = Product.objects.all().filter(is_available=True)
     trend_products = Product.objects.all().order_by('-num_visit')
+    best_seller_products = Product.objects.all().order_by('-num_order')[0:10]
     context = {
         'products': products,
         'trend_products': trend_products,
+        'best_seller_products': best_seller_products
     }
     return render(request, 'homepage/index.html', context=context)
 
